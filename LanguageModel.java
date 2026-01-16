@@ -36,7 +36,7 @@ public class LanguageModel {
         int n=windowLength;
 		In in= new In(fileName);
         String content= in.readAll();
-        for(int i=0; i<=content.length()-n; i++)
+        for(int i=0; i+n<content.length(); i++)
         {
             String key = content.substring(i, i + n);
             char nextChar = content.charAt(i + n);
@@ -59,9 +59,14 @@ public class LanguageModel {
 
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
-	void calculateProbabilities(List probs) {				
+	void calculateProbabilities(List probs) 
+    {		
+        if (probs == null || probs.getSize() == 0) 
+            return;
 		int total=0;
         ListIterator it = probs.listIterator(0);
+        if( it == null)
+            return ;
         while (it.hasNext()) 
         {
             CharData current = it.next();
@@ -70,6 +75,8 @@ public class LanguageModel {
         
         double cumulativeProb = 0.0;
         it = probs.listIterator(0);
+        if(it== null)
+            return;
         while(it.hasNext())
         {
             CharData current = it.next();
@@ -84,16 +91,22 @@ public class LanguageModel {
     // Returns a random character from the given probabilities list.
 	char getRandomChar(List probs) 
     {
-		double r = Math.random();
+        if (probs == null || probs.getSize() == 0) 
+            return '\0';
+		double r = randomGenerator.nextDouble();
         ListIterator it = probs.listIterator(0);
-        while (it.hasNext()) 
-        {
+        if(it != null)
+         {
+            while (it.hasNext()) 
+            {
             CharData current = it.next();
             if (r<current.cp)
                 return current.chr;
            
-        }
-		return probs.get(0).chr;
+            }
+         }    
+         
+		return probs.get(probs.getSize() - 1).chr;
 	}
 
     /**
