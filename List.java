@@ -35,6 +35,7 @@ public class List {
         Node newNode= new Node (newcp);
         newNode.next= first;
         first=newNode;
+        size++;
     }
     
     /** GIVE Textual representation of this list. */
@@ -63,7 +64,7 @@ public class List {
         int index=0;
         while (current!=null) 
         {
-            if(current.cp.equals(chr))
+            if(current.cp.chr== chr && current.cp!=null)
                 return index;
             index++;
             current=current.next;
@@ -76,7 +77,8 @@ public class List {
      *  given chr to the beginning of this list. */
     public void update(char chr) {
     int index = indexOf(chr);
-    if (index != -1) {
+    if (index != -1) 
+    {
         // התו קיים, שולפים אותו ומעלים את המונה
         CharData data = get(index);
         data.count++;
@@ -93,16 +95,18 @@ public class List {
         Node current= first;
         if(current==null)
             return false;
-        if(current.cp.chr==chr)
+        if(current.cp.chr==chr && current.cp != null)
         {
-            current=current.next;
+            first=first.next;
+            size--;
             return true;
         }
         while(current.next!=null)
         {
-            if(current.next.cp.chr==chr)
+            if(current.next.cp.chr==chr && current.next.cp != null)
             {
                 current.next=current.next.next;
+                size--;
                 return true;
             }
             current=current.next;
@@ -116,8 +120,9 @@ public class List {
     public CharData get(int index) {
         Node current= first;
         int i=0;
-         if(index<0)
-           return null;
+         if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
         while (current!=null) 
         {
             if(i==index)
@@ -147,6 +152,8 @@ public class List {
     public ListIterator listIterator(int index) {
 	    // If the list is empty, there is nothing to iterate   
 	    if (size == 0) return null;
+        if (index < 0) index = 0;
+        if (index >= size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
 	    // Gets the element in position index of this list
 	    Node current = first;
 	    int i = 0;
