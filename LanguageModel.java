@@ -36,17 +36,22 @@ public class LanguageModel {
         int n=windowLength;
 		In in= new In(fileName);
         String content= in.readAll();
-        for(int i=0; i+n<content.length(); i++)
+        if (content == null || content.length() <= n)
+            return;
+        for(int i=0; i<=content.length()-n; i++)
         {
             String key = content.substring(i, i + n);
-            char nextChar = content.charAt(i + n);
-            List probs = CharDataMap.get(key);
-            if(probs==null)
+            if (i + n < content.length()) 
             {
-                probs = new List();
-                CharDataMap.put(key, probs);
-            }
+                char nextChar = content.charAt(i + n);
+                List probs = CharDataMap.get(key);
+                if(probs==null)
+                {
+                    probs = new List();
+                    CharDataMap.put(key, probs);
+                }
             probs.update(nextChar);
+            }
         }
         Object[] keys = CharDataMap.keySet().toArray();
         for(int i=0; i<keys.length; i++)
