@@ -42,6 +42,7 @@ public class List {
     {
         Node current= first;
         String str= "(";
+
             while(current!=null)
             {
                 str= str+current.cp.toString();
@@ -62,7 +63,7 @@ public class List {
         int index=0;
         while (current!=null) 
         {
-            if(current.cp.chr==chr)
+            if(current.cp.equals(chr))
                 return index;
             index++;
             current=current.next;
@@ -74,21 +75,16 @@ public class List {
      *  increments its counter. Otherwise, adds a new CharData object with the
      *  given chr to the beginning of this list. */
     public void update(char chr) {
-        Node current = first;
-        boolean found= false;
-        while(current!=null && found==false)
-        {
-            if(current.cp.chr== chr)
-            {
-                current.cp.count++;
-                found=true;
-            }
-            current=current.next;
-               
-        }
-        if (found==false)
-            addFirst(chr);
+    int index = indexOf(chr);
+    if (index != -1) {
+        // התו קיים, שולפים אותו ומעלים את המונה
+        CharData data = get(index);
+        data.count++;
+    } else {
+        // התו לא קיים, מוסיפים חדש
+        addFirst(chr);
     }
+}
 
     /** GIVE If the given character exists in one of the CharData objects
      *  in this list, removes this CharData object from the list and returns
@@ -121,7 +117,7 @@ public class List {
         Node current= first;
         int i=0;
          if(index<0)
-           throw new IndexOutOfBoundsException();
+           return null;
         while (current!=null) 
         {
             if(i==index)
@@ -131,7 +127,7 @@ public class List {
 
         }
     
-        throw new IndexOutOfBoundsException();
+        return null;
     
     }
 
